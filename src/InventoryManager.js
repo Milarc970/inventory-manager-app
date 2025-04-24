@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { CheckCircle } from "lucide-react";
 
-const SHEETDB_API_URL = "https://sheetdb.io/api/v1/1g2o5huoe0dew";
+const SHEETDB_API_URL = "https://sheetdb.io/api/v1/abc123xyz456";
 
 export default function InventoryManager() {
   const [inventory, setInventory] = useState([]);
