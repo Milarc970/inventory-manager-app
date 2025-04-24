@@ -83,7 +83,9 @@ export default function InventoryManager() {
     `;
     printWindow.document.write(content);
     printWindow.document.close();
-    printWindow.print();
+    printWindow.onload = () => {
+        printWindow.print();
+      };      
   };
 
   const handleScannerInput = (event) => {
