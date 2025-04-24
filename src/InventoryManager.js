@@ -89,8 +89,10 @@ export default function InventoryManager() {
   const handleScannerInput = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      const trimmedScan = scannedCodeRef.current.trim().toUpperCase();
-      const matchedItem = inventory.find(item => item.sku.trim().toUpperCase() === trimmedScan);
+      const trimmedScan = scannedCodeRef.current.trim().toLowerCase();
+      const matchedItem = inventory.find(item =>
+        (item.sku || "").toString().trim().toLowerCase() === trimmedScan
+      );
       if (matchedItem) {
         setSelectedProduct(matchedItem);
         setShowModal(true);
