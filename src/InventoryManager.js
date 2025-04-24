@@ -30,7 +30,7 @@ export default function InventoryManager() {
 
   const handleUpdateInventory = async () => {
     if (!selectedProduct || !quantityInput) {
-      alert("Please scan a SKU and enter a quantity.");
+      alert("Please scan a barcode and enter a quantity.");
       return;
     }
 
@@ -59,9 +59,9 @@ export default function InventoryManager() {
 
   const handleOrderItem = () => {
     if (scanInput) {
-      alert(`Order placed for SKU: ${scanInput}`);
+      alert(`Order placed for: ${scanInput}`);
     } else {
-      alert("Please scan or enter a SKU to order.");
+      alert("Please scan a barcode to order.");
     }
   };
 
@@ -73,9 +73,9 @@ export default function InventoryManager() {
       <body style="font-family: Arial; padding: 20px;">
         <h1>Barcode Labels</h1>
         ${inventory.map(item => `
-          <div style="margin-bottom: 20px; text-align: center;">
-            <div><strong>${item.product}</strong></div>
-            <img src="https://barcodeapi.org/api/128/${item.sku}" alt="Barcode for ${item.product}" style="height: 80px; margin-top: 5px;" />
+          <div style="margin-bottom: 12px; text-align: center;">
+            <div style="margin-bottom: 4px;"><strong>${item.product} - SKU: ${item.sku}</strong></div>
+            <img src="https://barcodeapi.org/api/128/${encodeURIComponent(item.sku)}" alt="Barcode for ${item.sku}" style="height: 60px; display: block; margin: 0 auto;" />
           </div>
         `).join('')}
       </body>
@@ -104,8 +104,10 @@ export default function InventoryManager() {
       if (matchedItem) {
         setSelectedProduct(matchedItem);
         setShowModal(true);
+        alert(`Scanned SKU: ${matchedItem.sku}
+Product: ${matchedItem.product}`);
       } else {
-        alert(`SKU ${cleanedScan} not found.`);
+        alert(`Barcode ${cleanedScan} not found.`);
       }
 
       scannedCodeRef.current = "";
@@ -174,8 +176,8 @@ export default function InventoryManager() {
                 <td style={{ padding: "8px" }}>{item.sku}</td>
                 <td style={{ padding: "8px" }}>
                   <img 
-                    src={`https://barcodeapi.org/api/128/${item.sku}`} 
-                    alt={`Barcode for ${item.product}`} 
+                    src={`https://barcodeapi.org/api/128/${encodeURIComponent(item.sku)}`} 
+                    alt={`Barcode for ${item.sku}`} 
                     style={{ height: "50px" }}
                   />
                 </td>
