@@ -84,23 +84,28 @@ export default function InventoryManager() {
     printWindow.document.write(content);
     printWindow.document.close();
     printWindow.onload = () => {
-        printWindow.print();
-      };      
+      printWindow.print();
+    };
   };
 
   const handleScannerInput = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      const trimmedScan = scannedCodeRef.current.trim().toLowerCase();
+
+      const rawScan = scannedCodeRef.current;
+      const cleanedScan = rawScan.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+
       const matchedItem = inventory.find(item =>
-        (item.sku || "").toString().trim().toLowerCase() === trimmedScan
+        (item.sku || "").toString().replace(/[^a-zA-Z0-9]/g, "").toLowerCase() === cleanedScan
       );
+
       if (matchedItem) {
         setSelectedProduct(matchedItem);
         setShowModal(true);
       } else {
-        alert(`SKU ${trimmedScan} not found.`);
+        alert(`SKU ${cleanedScan} not found.`);
       }
+
       scannedCodeRef.current = "";
       setScanInput("");
     } else {
@@ -133,8 +138,15 @@ export default function InventoryManager() {
           autoFocus
           placeholder="Tap here before scanning"
           style={{ width: "100%", fontSize: "20px", padding: "24px", border: "4px solid #F59E0B", borderRadius: "12px", textAlign: "center", marginTop: "12px" }}
+          onInput={(e) => {
+            scannedCodeRef.current = e.target.value;
+            setScanInput(e.target.value);
+          }}
           onKeyDown={handleScannerInput}
         />
+        <p style={{ textAlign: "center", marginTop: "8px", fontSize: "16px", color: "blue" }}>
+          Scanned Input: [{scanInput}]
+        </p>
       </div>
 
       {showModal && selectedProduct && (
@@ -208,3 +220,4 @@ export default function InventoryManager() {
     </div>
   );
 }
+
