@@ -96,7 +96,6 @@ export default function InventoryManager() {
       if (matchedItem) {
         setSelectedProduct(matchedItem);
         setShowModal(true);
-        alert(`Scanned SKU: ${matchedItem.sku}\nProduct: ${matchedItem.product}`);
       } else {
         alert(`Barcode ${cleanedScan} not found.`);
       }
@@ -179,6 +178,39 @@ export default function InventoryManager() {
           </tbody>
         </table>
       </div>
+
+      {showModal && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.6)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000
+        }}>
+          <div style={{
+            background: "white", padding: "24px", borderRadius: "12px", width: "90%", maxWidth: "400px", textAlign: "center"
+          }}>
+            <h2 style={{ marginBottom: "12px" }}>Update Quantity</h2>
+            <p><strong>{selectedProduct?.product}</strong></p>
+            <p style={{ marginBottom: "16px" }}>SKU: {selectedProduct?.sku}</p>
+
+            <input
+              ref={quantityInputRef}
+              type="number"
+              value={quantityInput}
+              onChange={(e) => setQuantityInput(e.target.value)}
+              placeholder="Enter quantity"
+              style={{ width: "100%", padding: "12px", fontSize: "16px", marginBottom: "16px", borderRadius: "8px", border: "1px solid #ccc" }}
+            />
+
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <button onClick={handleUpdateInventory} style={{ padding: "10px 20px", backgroundColor: "#22c55e", color: "white", border: "none", borderRadius: "8px" }}>
+                Save
+              </button>
+              <button onClick={() => setShowModal(false)} style={{ padding: "10px 20px", backgroundColor: "#ef4444", color: "white", border: "none", borderRadius: "8px" }}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
