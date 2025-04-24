@@ -35,7 +35,7 @@ export default function InventoryManager() {
     }
 
     try {
-      await axios.patch(`${SHEETDB_API_URL}/sku/${selectedProduct.sku}`, {
+      await axios.patch(`${SHEETDB_API_URL}/product/${selectedProduct.product}`, {
         data: { quantity: quantityInput },
       });
       setScanInput("");
@@ -74,31 +74,7 @@ export default function InventoryManager() {
         <h1>Barcode Labels</h1>
         ${inventory.map(item => `
           <div style="margin-bottom: 12px; text-align: center;">
-            <div style="margin-bottom: 4px;"><strong>${item.product} - SKU: ${item.sku}</strong></div>
-            <img src="https://barcodeapi.org/api/128/${encodeURIComponent(item.sku)}" alt="Barcode for ${item.sku}" style="height: 60px; display: block; margin: 0 auto;" />
-          </div>
-        `).join('')}
-      </body>
-      </html>
-    `;
-    printWindow.document.write(content);
-    printWindow.document.close();
-    printWindow.onload = () => {
-      printWindow.print();
-    };
-  };
-
-  const handleScannerInput = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-
-      const rawScan = scannedCodeRef.current;
-      const cleanedScan = rawScan.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-
-      console.log("All SKUs in inventory:", inventory.map(i => i.sku));
-
-      const matchedItem = inventory.find(item =>
-        (item.sku || "").toString().replace(/[^a-zA-Z0-9]/g, "").toLowerCase() === cleanedScan
+            <div style="margin-bottom: 4px;"><strong>${item.product} - SKU: ${item.product.toString().replace(/[^a-zA-Z0-9]/g, '').toLowerCase() === cleanedScan
       );
 
       if (matchedItem) {
