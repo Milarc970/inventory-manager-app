@@ -149,9 +149,43 @@ export default function InventoryManager() {
         <p style={{ textAlign: "center", marginTop: "8px", fontSize: "16px", color: "blue" }}>
           Scanned Input: [{scanInput}]
         </p>
+
+        <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>
+          <button onClick={handleOrderItem}>Order Item</button>
+          <button onClick={handlePrintBarcodes}>Print Barcode Sheet</button>
+        </div>
       </div>
 
-      {/* ...rest of the component stays the same... */}
+      <div style={{ overflowX: "auto", marginTop: "24px" }}>
+        <table style={{ width: "100%", fontSize: "14px", borderCollapse: "collapse" }}>
+          <thead>
+            <tr>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ccc", padding: "8px" }}>Product</th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ccc", padding: "8px" }}>SKU</th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ccc", padding: "8px" }}>Barcode</th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ccc", padding: "8px" }}>Quantity</th>
+              <th style={{ textAlign: "left", borderBottom: "1px solid #ccc", padding: "8px" }}>Vendor</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inventory.map((item, index) => (
+              <tr key={index}>
+                <td style={{ padding: "8px" }}>{item.product}</td>
+                <td style={{ padding: "8px" }}>{item.sku}</td>
+                <td style={{ padding: "8px" }}>
+                  <img 
+                    src={`https://barcodeapi.org/api/128/${item.sku}`} 
+                    alt={`Barcode for ${item.product}`} 
+                    style={{ height: "50px" }}
+                  />
+                </td>
+                <td style={{ padding: "8px" }}>{item.quantity}</td>
+                <td style={{ padding: "8px" }}>{item.vendor}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
