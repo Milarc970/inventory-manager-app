@@ -35,7 +35,7 @@ export default function InventoryManager() {
     }
 
     try {
-      await axios.patch(`${SHEETDB_API_URL}/product/${selectedProduct.product}`, {
+      await axios.patch(`${SHEETDB_API_URL}/sku/${selectedProduct.sku}`, {
         data: { quantity: quantityInput },
       });
       setScanInput("");
@@ -69,19 +69,34 @@ export default function InventoryManager() {
     const printWindow = window.open("", "_blank");
     const content = `
       <html>
-      <head><title>Print Barcodes</title></head>
-      <body style="font-family: Arial; padding: 20px;">
-        <h1>Barcode Labels</h1>
-        ${inventory.map(item => `
-          <div style="margin-bottom: 12px; text-align: center;">
-            <div style="margin-bottom: 4px;"><strong>${item.product} - SKU: ${item.product.toString().replace(/[^a-zA-Z0-9]/g, '').toLowerCase() === cleanedScan
+        <head><title>Print Barcodes</title></head>
+        <body style="font-family: Arial; padding: 20px;">
+          <h1>Barcode Labels</h1>
+          ${inventory.map(item => `
+            <div style="margin-bottom: 12px; text-align: center;">
+              <div style="margin-bottom: 4px;"><strong>${item.product} - SKU: ${item.sku}</strong></div>
+              <img src="https://barcodeapi.org/api/128/${encodeURIComponent(item.sku)}" alt="Barcode for ${item.sku}" />
+            </div>
+          `).join('')}
+        </body>
+      </html>
+    `;
+    printWindow.document.write(content);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
+  const handleScannerInput = (event) => {
+    if (event.key === "Enter") {
+      const cleanedScan = scannedCodeRef.current.trim();
+      const matchedItem = inventory.find(
+        item => item.sku?.toString().trim() === cleanedScan
       );
 
       if (matchedItem) {
         setSelectedProduct(matchedItem);
         setShowModal(true);
-        alert(`Scanned SKU: ${matchedItem.sku}
-Product: ${matchedItem.product}`);
+        alert(`Scanned SKU: ${matchedItem.sku}\nProduct: ${matchedItem.product}`);
       } else {
         alert(`Barcode ${cleanedScan} not found.`);
       }
